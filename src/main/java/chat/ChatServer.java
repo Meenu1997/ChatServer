@@ -32,7 +32,7 @@ import chat.model.Constant;
 import chat.model.LocalChatRoomInfo;
 import chat.model.RemoteChatRoomInfo;
 import chat.service.*;
-import chat.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -164,11 +164,11 @@ public class ChatServer {
 
 //                logger.info("Leader Election is running in FAST-BULLY mode");
 
-                new FastBullyElectionManagementService().sendIamUpMessage(serverState.getServerInfo(),
+                new FastBullyElection().sendIamUpMessage(serverState.getServerInfo(),
                         serverState.getServerInfoList());
                 try {
                     //serverState.setViewMessageReceived(false);
-                    new FastBullyElectionManagementService().startWaitingForViewMessage(serverState.getElectionAnswerTimeout());
+                    new FastBullyElection().startWaitingForViewMessage(serverState.getElectionAnswerTimeout());
                 } catch (SchedulerException e) {
                     logger.error("Error while waiting for the view message at fast bully election: " +
                             e.getLocalizedMessage());

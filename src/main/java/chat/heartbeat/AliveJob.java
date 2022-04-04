@@ -10,8 +10,7 @@ import chat.common.model.ServerInfo;
 import chat.service.JSONMessageBuilder;
 import chat.service.PeerClient;
 import chat.service.ServerState;
-import chat.election.BullyElectionManagementService;
-import chat.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 public class AliveJob implements Job {
 
@@ -56,7 +55,7 @@ public class AliveJob implements Job {
                         // send the start election message to every server with a higher priority
                         if (serverState.getIsFastBully()) {
 
-                            new FastBullyElectionManagementService().startElection(serverState.getServerInfo(),
+                            new FastBullyElection().startElection(serverState.getServerInfo(),
                                     serverState.getCandidateServerInfoList(), serverState.getElectionAnswerTimeout());
 
                         } else {

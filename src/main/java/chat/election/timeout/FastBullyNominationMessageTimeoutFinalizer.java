@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import chat.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 @DisallowConcurrentExecution
 public class FastBullyNominationMessageTimeoutFinalizer extends MessageTimeoutFinalizer {
@@ -14,10 +14,10 @@ public class FastBullyNominationMessageTimeoutFinalizer extends MessageTimeoutFi
     public void execute(JobExecutionContext context) throws JobExecutionException {
         if (!interrupted.get()) {
             // stop any ongoing election
-            new FastBullyElectionManagementService().stopElection(serverState.getServerInfo());
+            new FastBullyElection().stopElection(serverState.getServerInfo());
 
             // restart the election procedure
-            new FastBullyElectionManagementService()
+            new FastBullyElection()
                     .startElection(
                             serverState.getServerInfo(),
                             serverState.getCandidateServerInfoList(),

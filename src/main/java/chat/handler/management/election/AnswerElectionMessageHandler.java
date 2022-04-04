@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 import chat.common.model.Protocol;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.election.BullyElectionManagementService;
 
 public class AnswerElectionMessageHandler extends ManagementHandler implements IProtocolHandler {
 

@@ -13,14 +13,14 @@ import chat.common.model.ServerInfo;
 
 import java.util.List;
 
-public class FastBullyElectionManagementService{
+public class FastBullyElection {
 
     protected JSONMessageBuilder jsonMessageBuilder;
     protected PeerClient peerClient;
     protected ServerState serverState;
     protected Scheduler scheduler;
 
-    public FastBullyElectionManagementService() {
+    public FastBullyElection() {
         this.jsonMessageBuilder = JSONMessageBuilder.getInstance();
         this.peerClient = new PeerClient();
         this.serverState = ServerState.getInstance();
@@ -145,12 +145,6 @@ public class FastBullyElectionManagementService{
         }
     }
 
-    public void startWaitingForAnswerMessage(ServerInfo proposingCoordinator, Long timeout) {
-        JobDetail answerMsgTimeoutJob =
-                JobBuilder.newJob(ElectionAnswerMessageTimeoutFinalizer.class).withIdentity
-                        ("answer_msg_timeout_job", "group_" + proposingCoordinator.getServerId()).build();
-        startWaitingTimer("group_" + proposingCoordinator.getServerId(), timeout, answerMsgTimeoutJob);
-    }
 
     public void replyAnswerForElectionMessage(ServerInfo requestingCandidate, ServerInfo me) {
         System.out.println("Replying answer for the election start message from : " + requestingCandidate.getServerId());
@@ -283,5 +277,5 @@ public class FastBullyElectionManagementService{
         peerClient.relaySelectedPeers(subordinateServerInfoList, coordinatorMessage);
     }
 
-    private static final Logger logger = LogManager.getLogger(FastBullyElectionManagementService.class);
+    private static final Logger logger = LogManager.getLogger(FastBullyElection.class);
 }

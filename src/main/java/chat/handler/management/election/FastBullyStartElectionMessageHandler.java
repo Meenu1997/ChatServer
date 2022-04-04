@@ -7,7 +7,7 @@ import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 public class FastBullyStartElectionMessageHandler extends ManagementHandler implements IProtocolHandler {
 
@@ -30,8 +30,8 @@ public class FastBullyStartElectionMessageHandler extends ManagementHandler impl
                 new ServerInfo(potentialCandidateId, potentialCandidateAddress, potentialCandidatePort,
                         potentialCandidateManagementPort);
 
-        FastBullyElectionManagementService fastBullyElectionManagementService =
-                new FastBullyElectionManagementService();
+        FastBullyElection fastBullyElectionManagementService =
+                new FastBullyElection();
 
         fastBullyElectionManagementService
                 .replyAnswerForElectionMessage(potentialCandidate, serverState.getServerInfo());

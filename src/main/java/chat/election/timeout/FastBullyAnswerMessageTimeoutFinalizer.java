@@ -6,15 +6,15 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import chat.common.model.ServerInfo;
-import chat.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 @DisallowConcurrentExecution
 public class FastBullyAnswerMessageTimeoutFinalizer extends MessageTimeoutFinalizer {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        FastBullyElectionManagementService fastBullyElectionManagementService =
-                new FastBullyElectionManagementService();
+        FastBullyElection fastBullyElectionManagementService =
+                new FastBullyElection();
 
         if (serverState.answerMessageReceived() || interrupted.get()) {
             // answer messages were received

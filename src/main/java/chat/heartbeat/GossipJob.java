@@ -11,8 +11,7 @@ import chat.model.Lingo;
 import chat.service.JSONMessageBuilder;
 import chat.service.PeerClient;
 import chat.service.ServerState;
-import chat.election.BullyElectionManagementService;
-import chat.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,7 +79,7 @@ public class GossipJob implements Job {
                 // send the start election message to every server with a higher priority
                 if (serverState.getIsFastBully()) {
 
-                    new FastBullyElectionManagementService().startElection(
+                    new FastBullyElection().startElection(
                             serverState.getServerInfo(),
                             serverState.getCandidateServerInfoList(),
                             serverState.getElectionAnswerTimeout());

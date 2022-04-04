@@ -7,7 +7,6 @@ import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.election.BullyElectionManagementService;
 
 public class StartElectionMessageHandler extends ManagementHandler implements IProtocolHandler {
 
