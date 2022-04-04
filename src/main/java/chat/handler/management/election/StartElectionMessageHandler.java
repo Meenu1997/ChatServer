@@ -7,7 +7,7 @@ import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.service.election.BullyElectionManagementService;
+import chat.election.BullyElectionManagementService;
 
 public class StartElectionMessageHandler extends ManagementHandler implements IProtocolHandler {
 
@@ -31,17 +31,17 @@ public class StartElectionMessageHandler extends ManagementHandler implements IP
                     new ServerInfo(potentialCandidateId, potentialCandidateAddress, potentialCandidatePort,
                             potentialCandidateManagementPort);
 
-            new BullyElectionManagementService()
-                    .replyAnswerForElectionMessage(potentialCandidate, serverState.getServerInfo());
-
-            // start a new election among the servers that have a higher priority
-
-            new BullyElectionManagementService()
-                    .startElection(serverState.getServerInfo(), serverState.getCandidateServerInfoList(),
-                            serverState.getElectionAnswerTimeout());
-
-            new BullyElectionManagementService()
-                    .startWaitingForAnswerMessage(serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
+//            new BullyElectionManagementService()
+//                    .replyAnswerForElectionMessage(potentialCandidate, serverState.getServerInfo());
+//
+//            // start a new election among the servers that have a higher priority
+//
+//            new BullyElectionManagementService()
+//                    .startElection(serverState.getServerInfo(), serverState.getCandidateServerInfoList(),
+//                            serverState.getElectionAnswerTimeout());
+//
+//            new BullyElectionManagementService()
+//                    .startWaitingForAnswerMessage(serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
 
         }
     }

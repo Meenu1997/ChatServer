@@ -1,10 +1,10 @@
-package chat.service.election.timeout;
+package chat.election.timeout;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.*;
 import chat.service.ServerState;
-import chat.service.election.BullyElectionManagementService;
+import chat.election.BullyElectionManagementService;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,9 +18,9 @@ public class ElectionAnswerMessageTimeoutFinalizer implements Job, Interruptable
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         if (!interrupted.get()) {
 
-            new BullyElectionManagementService().setupNewCoordinator(
-                    serverState.getServerInfo(),
-                    serverState.getSubordinateServerInfoList());
+//            new BullyElectionManagementService().setupNewCoordinator(
+//                    serverState.getServerInfo(),
+//                    serverState.getSubordinateServerInfoList());
 
             System.out.println("Election was finalized and the new leader is : " + serverState.getServerInfo().getServerId());
         }

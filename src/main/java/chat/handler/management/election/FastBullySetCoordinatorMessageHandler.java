@@ -7,7 +7,7 @@ import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElectionManagementService;
 
 public class FastBullySetCoordinatorMessageHandler extends ManagementHandler implements IProtocolHandler {
 

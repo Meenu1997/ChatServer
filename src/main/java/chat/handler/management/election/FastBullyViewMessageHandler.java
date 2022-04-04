@@ -8,7 +8,7 @@ import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
 import chat.service.ServerPriorityComparator;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElectionManagementService;
 
 public class FastBullyViewMessageHandler extends ManagementHandler implements IProtocolHandler {
 

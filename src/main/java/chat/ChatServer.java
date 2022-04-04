@@ -32,8 +32,7 @@ import chat.model.Constant;
 import chat.model.LocalChatRoomInfo;
 import chat.model.RemoteChatRoomInfo;
 import chat.service.*;
-import chat.service.election.BullyElectionManagementService;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElectionManagementService;
 
 import java.io.File;
 import java.io.FileNotFoundException;

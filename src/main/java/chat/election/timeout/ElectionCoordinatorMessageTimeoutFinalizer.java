@@ -1,10 +1,10 @@
-package chat.service.election.timeout;
+package chat.election.timeout;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.*;
 import chat.service.ServerState;
-import chat.service.election.BullyElectionManagementService;
+import chat.election.BullyElectionManagementService;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,12 +20,12 @@ public class ElectionCoordinatorMessageTimeoutFinalizer implements Job, Interrup
             // no coordinator message was received from a higher priority server
             // therefore restart the election
 
-            new BullyElectionManagementService()
-                    .startElection(serverState.getServerInfo(), serverState.getCandidateServerInfoList(),
-                            serverState.getElectionAnswerTimeout());
-
-            new BullyElectionManagementService()
-                    .startWaitingForAnswerMessage(serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
+//            new BullyElectionManagementService()
+//                    .startElection(serverState.getServerInfo(), serverState.getCandidateServerInfoList(),
+//                            serverState.getElectionAnswerTimeout());
+//
+//            new BullyElectionManagementService()
+//                    .startWaitingForAnswerMessage(serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
         }
 
 /*

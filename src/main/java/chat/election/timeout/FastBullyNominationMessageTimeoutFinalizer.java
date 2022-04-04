@@ -1,11 +1,11 @@
-package chat.service.election.timeout;
+package chat.election.timeout;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElectionManagementService;
 
 @DisallowConcurrentExecution
 public class FastBullyNominationMessageTimeoutFinalizer extends MessageTimeoutFinalizer {

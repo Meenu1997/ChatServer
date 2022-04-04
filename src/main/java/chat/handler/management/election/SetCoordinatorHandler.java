@@ -7,7 +7,7 @@ import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.service.election.BullyElectionManagementService;
+import chat.election.BullyElectionManagementService;
 
 public class SetCoordinatorHandler extends ManagementHandler implements IProtocolHandler {
 
@@ -20,7 +20,7 @@ public class SetCoordinatorHandler extends ManagementHandler implements IProtoco
         // stop its election
         System.out.println("Received coordinator from : " + jsonMessage.get(Protocol.serverid.toString()));
 
-        new BullyElectionManagementService().stopElection(serverState.getServerInfo());
+//        new BullyElectionManagementService().stopElection(serverState.getServerInfo());
 
         // accept the new coordinator
         String newCoordinatorId = (String) jsonMessage.get(Protocol.serverid.toString());
@@ -31,8 +31,8 @@ public class SetCoordinatorHandler extends ManagementHandler implements IProtoco
         ServerInfo newCoordinator = new ServerInfo(newCoordinatorId, newCoordinatorAddress, newCoordinatorPort,
                 newCoordinatorManagementPort);
 
-        new BullyElectionManagementService().acceptNewCoordinator(newCoordinator);
-        System.out.println("Accepted new Coordinator : " + newCoordinatorId);
+//        new BullyElectionManagementService().acceptNewCoordinator(newCoordinator);
+//        System.out.println("Accepted new Coordinator : " + newCoordinatorId);
     }
 
     private static final Logger logger = LogManager.getLogger(SetCoordinatorHandler.class);

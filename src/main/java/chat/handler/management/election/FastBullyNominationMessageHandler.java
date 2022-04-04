@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElectionManagementService;
 
 public class FastBullyNominationMessageHandler extends ManagementHandler implements IProtocolHandler {
 

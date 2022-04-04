@@ -10,8 +10,8 @@ import chat.common.model.ServerInfo;
 import chat.service.JSONMessageBuilder;
 import chat.service.PeerClient;
 import chat.service.ServerState;
-import chat.service.election.BullyElectionManagementService;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.BullyElectionManagementService;
+import chat.election.FastBullyElectionManagementService;
 
 public class AliveJob implements Job {
 
@@ -61,13 +61,13 @@ public class AliveJob implements Job {
 
                         } else {
 
-                            new BullyElectionManagementService().startElection(
-                                    serverState.getServerInfo(),
-                                    serverState.getCandidateServerInfoList(),
-                                    serverState.getElectionAnswerTimeout());
-
-                            new BullyElectionManagementService().startWaitingForAnswerMessage(
-                                    serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
+//                            new BullyElectionManagementService().startElection(
+//                                    serverState.getServerInfo(),
+//                                    serverState.getCandidateServerInfoList(),
+//                                    serverState.getElectionAnswerTimeout());
+//
+//                            new BullyElectionManagementService().startWaitingForAnswerMessage(
+//                                    serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
 
                         }
                     }
