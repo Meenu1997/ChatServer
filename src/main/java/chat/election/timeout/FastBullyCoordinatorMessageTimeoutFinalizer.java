@@ -14,8 +14,6 @@ public class FastBullyCoordinatorMessageTimeoutFinalizer extends MessageTimeoutF
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         if (!interrupted.get()) {
-            // coordinator message was not received
-            // so get the next top candidate and send a nomination request
             FastBullyElection fastBullyElectionManagementService =
                     new FastBullyElection();
 
@@ -24,16 +22,12 @@ public class FastBullyCoordinatorMessageTimeoutFinalizer extends MessageTimeoutF
                 ServerInfo topCandidate = serverState.getTopCandidate();
 
                 if (null != topCandidate) {
-                    // if there's a candidate
                     fastBullyElectionManagementService.sendNominationMessage(topCandidate);
-
-                    // reset the timer to trigger the timeout
                     fastBullyElectionManagementService
                             .resetWaitingForCoordinatorMessageTimer(context, context.getTrigger().getKey(),
                                     serverState.getElectionCoordinatorTimeout());
 
                 } else {
-                    // if there are no candidates, start an election
                     fastBullyElectionManagementService
                             .stopElection(serverState.getServerInfo());
 
@@ -42,11 +36,6 @@ public class FastBullyCoordinatorMessageTimeoutFinalizer extends MessageTimeoutF
 
                 }
             } catch (NullPointerException ne) {
-                // FIXME expect calling serverState.getTopCandidate() throw null.
-                // look like tempCandidateServerInfoMap.pollFirstEntry() call is null,
-                // trying to access .getValue() on it. cant do much from calling side.
-                // how to fix this? look safe to just log and bypass now
-                // as condition:   if (null != topCandidate)
                 System.out.println(ne.getLocalizedMessage());
             }
         }

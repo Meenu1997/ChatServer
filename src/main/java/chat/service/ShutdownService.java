@@ -36,7 +36,7 @@ public class ShutdownService extends Thread {
             }
         } catch (InterruptedException e) {
             logger.trace(e.getMessage());
-            //e.printStackTrace();
+
         }
     }
 
@@ -47,7 +47,6 @@ public class ShutdownService extends Thread {
         for (ServerInfo server : serverState.getServerInfoList()) {
             if (server.equals(serverInfo)) continue;
 
-            // current Protocol has one room deletion per connection
             for (String roomId : serverState.getLocalChatRooms().keySet()) {
                 peerClient.commPeer(server, messageBuilder.deleteRoomPeers(roomId));
             }

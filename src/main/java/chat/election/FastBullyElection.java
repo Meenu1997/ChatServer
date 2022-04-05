@@ -29,8 +29,6 @@ public class FastBullyElection {
 
     public void startElection(ServerInfo proposingCoordinator, List<ServerInfo> candidatesList, Long electionAnswerTimeout) {
 
-        // System.out.println("Starting Fast-Bully Election...");
-
         serverState.initializeTemporaryCandidateMap();
         serverState.setAnswerMessageReceived(false);
         serverState.setOngoingElection(true);
@@ -69,7 +67,6 @@ public class FastBullyElection {
 
         } catch (ObjectAlreadyExistsException oe) {
 
-            // FIX this is fine, bec, since trigger is there, we can safely trigger the job, again!
             System.out.println(oe.getMessage());
 
             try {
@@ -93,16 +90,6 @@ public class FastBullyElection {
         startWaitingTimer("group_fast_bully", timeout, answerMsgTimeoutJob);
     }
 
-    public void setAnswerReceivedFlag() {
-        try {
-            JobKey fastBullyAnswerTimeoutJobKey = new JobKey("answer_msg_timeout_job", "group_fast_bully");
-            if (scheduler.checkExists(fastBullyAnswerTimeoutJobKey)) {
-                scheduler.interrupt(fastBullyAnswerTimeoutJobKey);
-            }
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void resetWaitingForCoordinatorMessageTimer(JobExecutionContext context, TriggerKey triggerKey, Long timeout) {
         try {
@@ -148,22 +135,6 @@ public class FastBullyElection {
         peerClient.commPeerOneWay(requestingCandidate, electionAnswerMessage);
     }
 
-    public void setupNewCoordinator(ServerInfo newCoordinator, List<ServerInfo> subordinateServerInfoList) {
-        System.out.println("Informing subordinates about the new coordinator...");
-        // inform subordinates about the new coordinator
-        String newCoordinatorServerId = newCoordinator.getServerId();
-        String newCoordinatorAddress = newCoordinator.getAddress();
-        Integer newCoordinatorServerPort = newCoordinator.getPort();
-        Integer newCoordinatorServerManagementPort = newCoordinator.getManagementPort();
-        String setCoordinatorMessage = jsonMessageBuilder
-                .setCoordinatorMessage(newCoordinatorServerId, newCoordinatorAddress, newCoordinatorServerPort,
-                        newCoordinatorServerManagementPort);
-        peerClient.relaySelectedPeers(subordinateServerInfoList, setCoordinatorMessage);
-
-        // accept the new coordinator
-        acceptNewCoordinator(newCoordinator);
-    }
-
     public void acceptNewCoordinator(ServerInfo newCoordinator) {
         serverState.setCoordinator(newCoordinator);
         serverState.setOngoingElection(false);
@@ -171,10 +142,6 @@ public class FastBullyElection {
         serverState.setAnswerMessageReceived(false);
         System.out.println("Accepting new coordinator --> " + newCoordinator.getServerId());
     }
-
-
-
-
 
     public void startWaitingForNominationOrCoordinationMessage(Long timeout) {
         JobDetail coordinatorMsgTimeoutJob =
@@ -190,9 +157,6 @@ public class FastBullyElection {
         startWaitingTimer("group_fast_bully", timeout, coordinatorMsgTimeoutJob);
     }
 
-    /**
-     * This is Boot time only election timer job.
-     */
     public void startWaitingForViewMessage(Long electionAnswerTimeout) throws SchedulerException {
         JobDetail coordinatorMsgTimeoutJob =
                 JobBuilder.newJob(FastBullyViewMessageTimeoutFinalizer.class).withIdentity
@@ -215,16 +179,11 @@ public class FastBullyElection {
         try {
             if (scheduler.checkExists(jobKey)) {
                 scheduler.interrupt(jobKey);
-                //scheduler.deleteJob(jobKey);
-//                System.out.println(String.format("Job [%s] get interrupted from [%s]",
-//                        jobKey, scheduler.getSchedulerName()));
             }
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
     }
-
-
 
     public void stopWaitingForAnswerMessage() {
         JobKey answerMsgTimeoutJobKey = new JobKey("answer_msg_timeout_job", "group_fast_bully");
@@ -254,7 +213,6 @@ public class FastBullyElection {
 
     public void sendViewMessage(ServerInfo sender, ServerInfo coordinator) {
         if (null == coordinator) {
-            // in the beginning coordinator could be null
             coordinator = sender;
         }
         String viewMessage = jsonMessageBuilder.viewMessage(coordinator.getServerId(), coordinator.getAddress(),
@@ -272,5 +230,4 @@ public class FastBullyElection {
         peerClient.relaySelectedPeers(subordinateServerInfoList, coordinatorMessage);
     }
 
-    private static final Logger logger = LogManager.getLogger(FastBullyElection.class);
 }

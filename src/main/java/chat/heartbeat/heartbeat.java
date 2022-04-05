@@ -22,7 +22,6 @@ public class heartbeat implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
         if (null != serverState.getCoordinator()) {
-            // let it put in trace for now, bec take debug as default dev mode
             System.out.println("Current coordinator --> " + serverState.getCoordinator().getServerId());
 
         }
@@ -49,15 +48,12 @@ public class heartbeat implements Job {
                 count = serverState.getAliveMap().get(serverId);
 
                 if (count > Integer.parseInt(aliveErrorFactor)) {
-                    // if the offline server is the coordinator, start the election process
                     if (null != serverState.getCoordinator() && serverInfo.getServerId().equalsIgnoreCase(serverState
                             .getCoordinator().getServerId())) {
-                        // send the start election message to every server with a higher priority
                         if (serverState.getIsFastBully()) {
 
                             new FastBullyElection().startElection(serverState.getServerInfo(),
                                     serverState.getCandidateServerInfoList(), serverState.getElectionAnswerTimeout());
-
                         }
                     }
                     peerClient.relayPeers(messageBuilder.notifyServerDownMessage(serverId));
@@ -70,6 +66,4 @@ public class heartbeat implements Job {
             }
         }
     }
-
-    private static final Logger logger = LogManager.getLogger(heartbeat.class);
 }

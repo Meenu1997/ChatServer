@@ -50,19 +50,16 @@ public class ManagementConnection implements Runnable {
                 Message msg = messageQueue.take();
 
                 if (!msg.isFromClient() && msg.getMessage().equals("exit")) {
-                    //logger.trace("EOF");
                     break;
                 }
 
                 if (msg.isFromClient()) {
 
                     JSONObject jsonMessage = (JSONObject) parser.parse(msg.getMessage());
-//                    System.out.println("[S2S]Receiving: " + msg.getMessage());
 
                     ProtocolHandlerFactory.newManagementHandler(jsonMessage, this).handle();
 
                 } else {
-//                    System.out.println("[S2S]Sending  : " + msg.getMessage());
                     write(msg.getMessage());
                 }
             }

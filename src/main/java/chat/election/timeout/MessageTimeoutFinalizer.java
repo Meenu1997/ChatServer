@@ -14,7 +14,6 @@ public abstract class MessageTimeoutFinalizer implements Job, InterruptableJob {
     @Override
     public void interrupt() throws UnableToInterruptJobException {
         interrupted.set(true);
-//        System.out.println("Job  interrupted");
     }
 
     public abstract Logger getLogger();

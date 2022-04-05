@@ -45,16 +45,13 @@ public class ChatServer {
     @Option(name = "-n", usage = "n=Server ID")
     private String serverId = "1";
 
-    @Option(name = "-l", usage = "l=Server Configuration File")
+
     private String serverConfig = "./config/server.tab";
 
-    @Option(name = "-c", usage = "c=System Properties file")
     private File systemPropertiesFile = new File("./config/system.properties");
 
-    @Option(name = "-d", usage = "d=Debug")
     private boolean debug = false;
 
-    @Option(name = "--trace", usage = "trace=Trace")
     private boolean trace = false;
 
     private ServerState serverState = ServerState.getInstance();

@@ -51,7 +51,6 @@ public class NewIdentityProtocolHandler extends CommonHandler implements IProtoc
                 messageQueue.add(new Message(false, messageBuilder.newIdentityResp("false")));
             }
 
-            // release identity on peers
             peerClient.relayPeers(messageBuilder.releaseIdentity(requestIdentity));
         }
     }

@@ -54,9 +54,6 @@ public class ClientConnection implements Runnable {
 
         try {
 
-            //this.currentUser = SecurityUtils.getSubject();
-           // logger.trace("[INIT] " + currentUser.getPrincipal() + ", " + currentUser.isAuthenticated() + ", " + currentUser.getSession().getId());
-
             pool.execute(new MessageReader(reader, messageQueue));
 
             while (true) {
@@ -65,7 +62,6 @@ public class ClientConnection implements Runnable {
                 logger.trace("Processing client messages: " + msg.getMessage());
 
                 if (!msg.isFromClient() && msg.getMessage().equalsIgnoreCase("exit")) {
-                    //The client program is abruptly terminated (e.g. using Ctrl-C)
                     ProtocolHandlerFactory.newClientHandler(null, this).handle();
                     logger.trace("EOF");
                     break;
@@ -74,19 +70,13 @@ public class ClientConnection implements Runnable {
                 if (msg.isFromClient()) {
 
                     JSONObject jsonMessage = (JSONObject) parser.parse(msg.getMessage());
-//                    System.out.println("Receiving: " + msg.getMessage());
-
-                    //logger.trace("[BEFORE] " + currentUser.getPrincipal() + ", " + currentUser.isAuthenticated() + ", " + currentUser.getSession().getId());
 
                     ProtocolHandlerFactory.newClientHandler(jsonMessage, this).handle();
-
-                    //logger.trace("[AFTER] " + currentUser.getPrincipal() + ", " + currentUser.isAuthenticated() + ", " + currentUser.getSession().getId());
 
                     String type = (String) jsonMessage.get(Protocol.type.toString());
                     if (type.equalsIgnoreCase(Protocol.quit.toString())) break;
 
                 } else {
-//                    System.out.println("Sending  : " + msg.getMessage());
                     write(msg.getMessage());
                 }
             }
@@ -99,15 +89,11 @@ public class ClientConnection implements Runnable {
             if (userInfo != null) {
                 logger.info("Client disconnected: " + userInfo.getIdentity());
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
             pool.shutdownNow();
         } finally {
-            //performUserLogoutAndUserSessionCleanUp();
 
-            // Let close the socket at this point as no longer use.
-            // So that no side effect.
             if (!clientSocket.isClosed()) {
                 try {
                     writer.close();
@@ -129,48 +115,6 @@ public class ClientConnection implements Runnable {
 
         } catch (IOException e) {
             logger.trace(e.getMessage());
-        }
-    }
-
-    public void performUserLogoutAndUserSessionCleanUp() {
-        if (currentUser != null) {
-
-            String sessionId = (String) currentUser.getSession().getId();
-            String username = "";
-
-            try {
-
-                logger.info("Client disconnected: " + currentUser.getPrincipal());
-
-                // Subject currentUser = getCurrentUser();
-                username = (String) currentUser.getPrincipal();
-
-                new PeerClient().relayPeers(JSONMessageBuilder.getInstance().notifyUserSession(username, sessionId, "logout"));
-
-                serverState.getLocalUserSessions().remove(sessionId);
-
-                // must be last
-                currentUser.logout();
-
-            } catch (UnknownSessionException | ExpiredSessionException ignored) {
-
-                // handle session timeout
-
-                System.out.println("SessionException: " + ignored.getMessage() + ". It must has expired.");
-
-                username = serverState.getLocalUserSessions().get(sessionId).getUsername();
-
-                new PeerClient().relayPeers(JSONMessageBuilder.getInstance().notifyUserSession(username, sessionId, "logout"));
-
-                serverState.getLocalUserSessions().remove(sessionId);
-
-                // session timeout consider abrupt exit
-                ProtocolHandlerFactory.newClientHandler(null, this).handle();
-
-            } finally {
-
-                logger.info("Cleaning up " + username + " with session [" + sessionId + "].");
-            }
         }
     }
 
@@ -196,10 +140,6 @@ public class ClientConnection implements Runnable {
 
     public void setRouted(boolean routed) {
         this.routed = routed;
-    }
-
-    public Subject getCurrentUser() {
-        return currentUser;
     }
 
     private static final Logger logger = LogManager.getLogger(ClientConnection.class);

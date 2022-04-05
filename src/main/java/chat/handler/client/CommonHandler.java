@@ -44,36 +44,30 @@ public class CommonHandler {
     protected void doGracefulQuit() {
         String former = userInfo.getCurrentChatRoom();
 
-        // remove user from room
         serverState.getLocalChatRooms().get(former).removeMember(userInfo.getIdentity());
 
-        // follow delete room protocol if owner
         if (userInfo.isRoomOwner()) {
             doDeleteRoomProtocol(serverState.getLocalChatRooms().get(former));
         }
 
-        // remove user
         serverState.getConnectedClients().remove(userInfo.getIdentity());
     }
 
     protected void doDeleteRoomProtocol(LocalChatRoomInfo deletingRoom) {
-        // put all users to main hall
+
         serverState.getLocalChatRooms().get(mainHall).getMembers().addAll(deletingRoom.getMembers());
         for (String member : deletingRoom.getMembers()) {
             UserInfo client = serverState.getConnectedClients().get(member);
             if (client.getIdentity().equalsIgnoreCase(userInfo.getIdentity())) continue;
 
-            // TODO option#1 - work from this thread, option#2 - work on each connected client thread
             client.setCurrentChatRoom(mainHall);
             String msg = messageBuilder.roomChange(deletingRoom.getChatRoomId(), mainHall, client.getIdentity());
             broadcastMessageToRoom(msg, deletingRoom.getChatRoomId());
             broadcastMessageToRoom(msg, mainHall);
         }
 
-        // delete the room
         serverState.getLocalChatRooms().remove(deletingRoom.getChatRoomId());
 
-        // inform peers
         peerClient.relayPeers(messageBuilder.deleteRoomPeers(deletingRoom.getChatRoomId()));
     }
 

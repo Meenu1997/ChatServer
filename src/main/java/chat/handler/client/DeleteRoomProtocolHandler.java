@@ -14,7 +14,7 @@ public class DeleteRoomProtocolHandler extends CommonHandler implements IProtoco
 
     @Override
     public void handle() {
-        // {"type" : "deleteroom", "roomid" : "jokes"}
+
         String deleteRoomId = (String) jsonMessage.get(Protocol.roomid.toString());
         boolean roomExistedLocally = serverState.isRoomExistedLocally(deleteRoomId);
         if (roomExistedLocally) {
@@ -29,7 +29,6 @@ public class DeleteRoomProtocolHandler extends CommonHandler implements IProtoco
                 broadcastMessageToRoom(messageBuilder.roomChange(deleteRoomId, mainHall, userInfo.getIdentity()), deleteRoomId);
                 broadcastMessageToRoom(messageBuilder.roomChange(deleteRoomId, mainHall, userInfo.getIdentity()), mainHall);
 
-                //write(messageBuilder.deleteRoom(deleteRoomId, "true"));
                 messageQueue.add(new Message(false, messageBuilder.deleteRoom(deleteRoomId, "true")));
             } else {
                 messageQueue.add(new Message(false, messageBuilder.deleteRoom(deleteRoomId, "false")));

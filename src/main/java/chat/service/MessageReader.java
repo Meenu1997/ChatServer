@@ -22,8 +22,6 @@ public class MessageReader implements Runnable {
 	@Override
 	public void run() {
 		try {
-
-
 			String clientMsg;
 			while ((clientMsg = reader.readLine()) != null) {
 
@@ -33,21 +31,18 @@ public class MessageReader implements Runnable {
 				messageQueue.add(msg);
 			}
 
-			// Ctrl+C
 			Message exit = new Message(false, "exit");
 			messageQueue.add(exit);
 			
 		} catch (SocketException e) {
-            // Ctrl+C on Windows
 			Message exit = new Message(false, "exit");
 			messageQueue.add(exit);		
 		} catch (IOException ioe) {
-            //Remote host closed connection during handshake
             if (ioe.getMessage().equalsIgnoreCase("Remote host closed connection during handshake")) {
                 logger.warn("[KNOW ISSUE #1] Remote host closed connection during handshake");
 
             } else {
-                //ioe.printStackTrace();
+
 				logger.warn(ioe.getLocalizedMessage());
             }
 		}

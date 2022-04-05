@@ -67,14 +67,12 @@ public class PeerClient {
                 try {
                     writer.close();
                 } catch (IOException ignored) {
-                    // this exception does not affect the overall execution of the application
                 }
             }
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException ignored) {
-                    // this exception does not affect the overall execution of the application
                 }
             }
         }
@@ -92,8 +90,6 @@ public class PeerClient {
             writer.write(message + "\n");
             writer.flush();
 
-//            logger.trace("[S2S]Sending  : [" + server.getServerId()
-//                    + "@" + server.getAddress() + ":" + server.getManagementPort() + "] " + message);
             writer.close();
         } catch (IOException ioe) {
             logger.trace("Can't Connect: " + server.getServerId() + "@"
@@ -114,65 +110,11 @@ public class PeerClient {
                 try {
                     writer.close();
                 } catch (IOException ignored) {
-                    // this exception does not affect the overall execution of the application
                 }
             }
         }
     }
 
-    public String commPeer(ServerInfo server, String... messages) {
-
-        if (messages.length < 1) return null;
-
-        BufferedWriter writer = null;
-        BufferedReader reader = null;
-        Socket socket = null;
-        try {
-            socket = (Socket) socketfactory.createSocket(server.getAddress(), server.getManagementPort());
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
-            for (String message : messages) {
-                writer.write(message + "\n");
-                writer.flush();
-//                logger.trace("[S2S]Sending  : [" + server.getServerId()
-//                        + "@" + server.getAddress() + ":" + server.getManagementPort() + "] " + message);
-            }
-
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-            return reader.readLine();
-
-        } catch (IOException ioe) {
-            logger.trace("Can't Connect: " + server.getServerId() + "@"
-                    + server.getAddress() + ":" + server.getManagementPort());
-        } finally {
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    logger.trace("Unable to close the socket : " + e.getLocalizedMessage());
-                    try {
-                        socket.close();
-                    } catch (IOException ignored) {
-                    }
-                }
-            }
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException ignored) {
-                    // this exception does not affect the overall execution of the application
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ignored) {
-                    // this exception does not affect the overall execution of the application
-                }
-            }
-        }
-
-        return null;
-    }
 
     public boolean canPeersLockId(String jsonMessage) {
         boolean canLock = true;
@@ -192,11 +134,9 @@ public class PeerClient {
                 }
 
                 if (jj != null) {
-//                    logger.trace("[S2S]Receiving: [" + server.getServerId()
-//                            + "@" + server.getAddress() + ":" + server.getManagementPort() + "] " + jj.toJSONString());
                     String status = (String) jj.get(Protocol.locked.toString());
                     if (status.equalsIgnoreCase("false")) {
-                        canLock = false; // denied lock
+                        canLock = false;
                     }
                 }
             }
@@ -223,8 +163,6 @@ public class PeerClient {
             socket = (Socket) socketfactory.createSocket(server.getAddress(), server.getPort());
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
 
-            //performSystemDaemonAuthentication(writer);
-
             writer.write(message + "\n");
             writer.flush();
 
@@ -234,14 +172,13 @@ public class PeerClient {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 
             String resp = null;
-            //for (int i = 0; i < 2; i++) { // 2 = one for performSystemDaemonAuthentication, one for actual message response
-                resp = reader.readLine();
-            //}
+            resp = reader.readLine();
+
 
             return resp;
 
         } catch (IOException ioe) {
-            //ioe.printStackTrace();
+
             logger.trace("[A52]Can't Connect: " + server.getServerId() + "@"
                     + server.getAddress() + ":" + server.getPort());
         } finally {
@@ -260,14 +197,12 @@ public class PeerClient {
                 try {
                     writer.close();
                 } catch (IOException ignored) {
-                    // this exception does not affect the overall execution of the application
                 }
             }
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException ignored) {
-                    // this exception does not affect the overall execution of the application
                 }
             }
         }

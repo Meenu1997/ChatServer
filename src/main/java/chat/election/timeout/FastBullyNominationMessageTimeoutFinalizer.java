@@ -13,10 +13,7 @@ public class FastBullyNominationMessageTimeoutFinalizer extends MessageTimeoutFi
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         if (!interrupted.get()) {
-            // stop any ongoing election
             new FastBullyElection().stopElection(serverState.getServerInfo());
-
-            // restart the election procedure
             new FastBullyElection()
                     .startElection(
                             serverState.getServerInfo(),

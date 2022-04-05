@@ -23,7 +23,4 @@ public class UserSession {
         this.status = status;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

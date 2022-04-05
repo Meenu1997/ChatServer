@@ -36,7 +36,7 @@ public class ServerState {
     private ConcurrentNavigableMap<String, ServerInfo> tempCandidateServerInfoMap;
     private Map<String, ServerInfo> subordinateServerInfoMap;
     private ServerInfo serverInfo;
-    // elected coordinator for the server cluster
+
     private ServerInfo coordinator;
 
     private AtomicBoolean stopRunning;
@@ -64,7 +64,6 @@ public class ServerState {
         lockedIdentities = new HashSet<>();
         lockedRoomIdentities = new HashSet<>();
         serverInfoMap = new ConcurrentHashMap<>();
-        // ConcurrentSkipListMap is thread safe and ordered by key
         candidateServerInfoMap = new ConcurrentSkipListMap<>(new ServerPriorityComparator());
         tempCandidateServerInfoMap = new ConcurrentSkipListMap<>(new ServerPriorityComparator());
         subordinateServerInfoMap = new ConcurrentHashMap<>();
@@ -85,22 +84,10 @@ public class ServerState {
 
     public synchronized void initServerState(String serverId) {
         serverInfo = serverInfoMap.get(serverId);
-/*
-        serverInfo = serverInfoList.stream()
-                .filter(e -> e.getServerId().equalsIgnoreCase(serverId))
-                .findFirst()
-                .get();
-*/
     }
 
     public synchronized ServerInfo getServerInfoById(String serverId) {
         return serverInfoMap.get(serverId);
-/*
-        return serverInfoList.stream()
-                .filter(e -> e.getServerId().equalsIgnoreCase(serverId))
-                .findFirst()
-                .get();
-*/
     }
 
     public synchronized ServerInfo getServerInfo() {
@@ -108,7 +95,7 @@ public class ServerState {
     }
 
     public synchronized List<ServerInfo> getServerInfoList() {
-        //return serverInfoList;
+
         return new ArrayList<>(serverInfoMap.values());
     }
 
@@ -135,9 +122,6 @@ public class ServerState {
         }
     }
 
-    public synchronized ServerInfo getTopCandidateWithoutRemoving() {
-        return candidateServerInfoMap.firstEntry().getValue();
-    }
 
     public synchronized List<ServerInfo> getCandidateServerInfoList() {
         return new ArrayList<>(candidateServerInfoMap.values());
@@ -148,7 +132,6 @@ public class ServerState {
     }
 
     public synchronized void setServerInfoList(List<ServerInfo> serverInfoList) {
-        //this.serverInfoList = serverInfoList;
         for (ServerInfo serverInfo : serverInfoList) {
             addServer(serverInfo);
         }
@@ -301,9 +284,6 @@ public class ServerState {
         this.coordinator = coordinator;
     }
 
-
-    // Utilities TODO refactor to Common Utilities
-
     public boolean isOnline(ServerInfo serverInfo) {
         boolean online = true;
         try {
@@ -312,10 +292,10 @@ public class ServerState {
             SocketFactory socketfactory = (SocketFactory) SocketFactory.getDefault();
             final Socket shortKet = (Socket) socketfactory.createSocket();
             shortKet.connect(address, timeOut);
-            //shortKet.startHandshake();
+
             shortKet.close();
         } catch (IOException e) {
-            //e.printStackTrace();
+
             online = false;
         }
         return online;

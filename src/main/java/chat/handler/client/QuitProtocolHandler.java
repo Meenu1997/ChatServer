@@ -15,7 +15,6 @@ public class QuitProtocolHandler extends CommonHandler implements IProtocolHandl
 
         doGracefulQuit();
 
-        // update about quitting user
         if (userInfo.isRoomOwner()) {
             broadcastMessageToRoom(messageBuilder.roomChange(former, "", userInfo.getIdentity()), mainHall, userInfo.getIdentity());
         } else {

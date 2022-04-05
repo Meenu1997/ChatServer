@@ -15,9 +15,6 @@ import chat.service.ServerState;
 
 public class ProtocolHandlerFactory {
 
-    /**
-     * @deprecated use newClientHandler() or newManagementHandler()
-     */
     @Deprecated
     public static IProtocolHandler newHandler(JSONObject jsonMessage, Runnable connection) {
 
@@ -38,24 +35,13 @@ public class ProtocolHandlerFactory {
 
         String type = (String) jsonMessage.get(Protocol.type.toString());
 
-
-        // Added 16/20/16 by Ray
         if (type.equalsIgnoreCase(Protocol.listserver.toString())) {
             return new ListServerProtocolHandler(jsonMessage, connection);
         }
 
-        // will check authentication inside handler itself
         if (type.equalsIgnoreCase(Protocol.movejoin.toString())) {
             return new MoveJoinProtocolHandler(jsonMessage, connection);
         }
-
-        //-- END Public protocols i.e before login
-
-        //-- Protocols that required to be authenticated - sweep check point
-
-        ClientConnection clientConnection = (ClientConnection) connection;
-
-
 
         if (type.equalsIgnoreCase(Protocol.newidentity.toString())) {
             return new NewIdentityProtocolHandler(jsonMessage, connection);
@@ -96,26 +82,20 @@ public class ProtocolHandlerFactory {
 
         if (connection instanceof ClientConnection) return new BlackHoleHandler();
 
-        // Management Protocols
-
         String type = (String) jsonMessage.get(Protocol.type.toString());
 
-        // acquire lock for user id
         if (type.equalsIgnoreCase(Protocol.lockidentity.toString())) {
             return new LockIdentityProtocolHandler(jsonMessage, connection);
         }
 
-        // release lock for user id
         if (type.equalsIgnoreCase(Protocol.releaseidentity.toString())) {
             return new ReleaseIdentityProtocolHandler(jsonMessage, connection);
         }
 
-        // acquire vote for locking room id
         if (type.equalsIgnoreCase(Protocol.lockroomid.toString())) {
             return new LockRoomIdProtocolHandler(jsonMessage, connection);
         }
 
-        // release lock for room id
         if (type.equalsIgnoreCase(Protocol.releaseroomid.toString())) {
             return new ReleaseRoomIdProtocolHandler(jsonMessage, connection);
         }
@@ -169,10 +149,6 @@ public class ProtocolHandlerFactory {
             return new FastBullyIAmUpMessageHandler(jsonMessage, connection);
         }
 
-//        if (type.equalsIgnoreCase(Protocol.gossip.toString())) {
-//            return new GossipProtocolHandler(jsonMessage, connection);
-//        }
-
         if (type.equalsIgnoreCase(Protocol.startvote.toString())) {
             return new StartVoteMessageHandler(jsonMessage, connection);
         }
@@ -184,5 +160,4 @@ public class ProtocolHandlerFactory {
         return new BlackHoleHandler();
     }
 
-    private static final Logger logger = LogManager.getLogger(ProtocolHandlerFactory.class);
 }
