@@ -7,7 +7,7 @@ import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 public class FastBullySetCoordinatorMessageHandler extends ManagementHandler implements IProtocolHandler {
 
@@ -20,7 +20,7 @@ public class FastBullySetCoordinatorMessageHandler extends ManagementHandler imp
         // stop its election
         System.out.println("Received coordinator from : " + jsonMessage.get(Protocol.serverid.toString()));
 
-        new FastBullyElectionManagementService().stopElection(serverState.getServerInfo());
+        new FastBullyElection().stopElection(serverState.getServerInfo());
 
         // accept the new coordinator
         String newCoordinatorId = (String) jsonMessage.get(Protocol.serverid.toString());
@@ -30,7 +30,7 @@ public class FastBullySetCoordinatorMessageHandler extends ManagementHandler imp
                 Integer.parseInt((String) jsonMessage.get(Protocol.managementport.toString()));
         ServerInfo newCoordinator = new ServerInfo(newCoordinatorId, newCoordinatorAddress, newCoordinatorPort,
                 newCoordinatorManagementPort);
-        new FastBullyElectionManagementService().acceptNewCoordinator(newCoordinator);
+        new FastBullyElection().acceptNewCoordinator(newCoordinator);
     }
 
     private static final Logger logger = LogManager.getLogger(FastBullySetCoordinatorMessageHandler.class);

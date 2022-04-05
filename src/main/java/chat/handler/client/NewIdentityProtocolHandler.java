@@ -24,7 +24,6 @@ public class NewIdentityProtocolHandler extends CommonHandler implements IProtoc
         boolean isUserIdValid = Utilities.isIdValid(requestIdentity);
 
         if (isUserExisted || !isUserIdValid) {
-            // {"type" : "newidentity", "approved" : "false"}
             messageQueue.add(new Message(false, messageBuilder.newIdentityResp("false")));
         } else {
 
@@ -44,10 +43,9 @@ public class NewIdentityProtocolHandler extends CommonHandler implements IProtoc
 
                 logger.info("Client connected: " + requestIdentity);
 
-                //{"type" : "newidentity", "approved" : "true"}
+
                 messageQueue.add(new Message(false, messageBuilder.newIdentityResp("true")));
 
-                //{"type" : "roomchange", "identity" : "Adel", "former" : "", "roomid" : "MainHall-s1"}
                 broadcastMessageToRoom(messageBuilder.roomChange("", mainHall, userInfo.getIdentity()), mainHall);
             } else {
                 messageQueue.add(new Message(false, messageBuilder.newIdentityResp("false")));

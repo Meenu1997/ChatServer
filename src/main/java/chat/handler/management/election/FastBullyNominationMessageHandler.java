@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 public class FastBullyNominationMessageHandler extends ManagementHandler implements IProtocolHandler {
 
@@ -16,8 +16,8 @@ public class FastBullyNominationMessageHandler extends ManagementHandler impleme
     @Override
     public void handle() {
         // accept the nomination and inform all the subordinate processes
-        FastBullyElectionManagementService fastBullyElectionManagementService =
-                new FastBullyElectionManagementService();
+        FastBullyElection fastBullyElectionManagementService =
+                new FastBullyElection();
 
         // send coordinator to all the lower priority servers
         fastBullyElectionManagementService.sendCoordinatorMessage(

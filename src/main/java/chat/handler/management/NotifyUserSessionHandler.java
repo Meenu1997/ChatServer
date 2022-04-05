@@ -16,8 +16,6 @@ public class NotifyUserSessionHandler extends ManagementHandler implements IProt
 
     @Override
     public void handle() {
-        //{"type" : "notifyusersession", "username" : "ray", "sessionid" : "ba64077b-85b4-40f0-a5ac-480ad3e341b3", "serverid", "s1", "status", "logout"}
-
         String username = (String) jsonMessage.get(Protocol.username.toString());
         String sessionId = (String) jsonMessage.get(Protocol.sessionid.toString());
         String serverId = (String) jsonMessage.get(Protocol.serverid.toString());

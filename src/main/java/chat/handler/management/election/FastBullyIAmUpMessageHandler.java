@@ -7,7 +7,7 @@ import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 public class FastBullyIAmUpMessageHandler extends ManagementHandler implements IProtocolHandler {
 
@@ -27,7 +27,7 @@ public class FastBullyIAmUpMessageHandler extends ManagementHandler implements I
         ServerInfo coordinator = serverState.getCoordinator();
 
         serverState.addToTemporaryCandidateMap(sender);
-        new FastBullyElectionManagementService().sendViewMessage(sender, coordinator);
+        new FastBullyElection().sendViewMessage(sender, coordinator);
     }
 
     private static final Logger logger = LogManager.getLogger(FastBullyIAmUpMessageHandler.class);

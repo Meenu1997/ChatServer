@@ -1,4 +1,4 @@
-package chat.service.election.timeout;
+package chat.election.timeout;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,15 +6,15 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import chat.common.model.ServerInfo;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 @DisallowConcurrentExecution
 public class FastBullyViewMessageTimeoutFinalizer extends MessageTimeoutFinalizer {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        FastBullyElectionManagementService fastBullyElectionManagementService =
-                new FastBullyElectionManagementService();
+        FastBullyElection fastBullyElectionManagementService =
+                new FastBullyElection();
         ServerInfo myServerInfo = serverState.getServerInfo();
         if (!interrupted.get() && !serverState.viewMessageReceived()) {
 

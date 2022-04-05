@@ -1,4 +1,4 @@
-package chat.service.election.timeout;
+package chat.election.timeout;
 
 import org.apache.logging.log4j.Logger;
 import org.quartz.*;

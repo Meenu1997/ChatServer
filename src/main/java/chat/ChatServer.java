@@ -25,15 +25,12 @@ import org.kohsuke.args4j.Option;
 import org.quartz.*;
 import chat.common.model.Protocol;
 import chat.common.model.ServerInfo;
-import chat.heartbeat.AliveJob;
-import chat.heartbeat.ConsensusJob;
-import chat.heartbeat.GossipJob;
+import chat.heartbeat.heartbeat;
 import chat.model.Constant;
 import chat.model.LocalChatRoomInfo;
 import chat.model.RemoteChatRoomInfo;
 import chat.service.*;
-import chat.service.election.BullyElectionManagementService;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -70,34 +67,27 @@ public class ChatServer {
     public ChatServer(String[] args) {
         try {
             CmdLineParser cmdLineParser = new CmdLineParser(this);
-//            logger.info("Parsing args...");
+
             cmdLineParser.parseArgument(args);
 
             System.out.println("ServerId --> "+ serverId );
-//            logger.info("option: -n " + serverId);
-//            logger.info("option: -l " + serverConfig);
-//            logger.info("option: -d " + debug);
 
-//            logger.info("Reading server config");
             readServerConfiguration();
 
-//            logger.info("option: -c " + systemPropertiesFile.toString());
-//            logger.info("Reading system properties file: " + systemPropertiesFile.toString());
             try {
                 Configurations configs = new Configurations();
                 systemProperties = configs.properties(systemPropertiesFile);
             } catch (ConfigurationException e) {
                 logger.error("Configuration error :  " + e.getLocalizedMessage());
             }
-//            logger.info("Setting up SSL system environment...");
+
             System.setProperty("javax.net.ssl.keyStore", systemProperties.getString("keystore"));
             System.setProperty("javax.net.ssl.keyStorePassword", "chatpass");
             System.setProperty("javax.net.ssl.trustStore", systemProperties.getString("keystore")); // needed for PeerClient
-            //System.setProperty("javax.net.debug","all"); // uncomment to debug SSL, and comment it back there after
 
            setupShiro();
 
-//            logger.info("Init server state");
+
             serverState.initServerState(serverId);
 
             serverInfo = serverState.getServerInfo();
@@ -115,16 +105,6 @@ public class ChatServer {
             serverState.setupConnectedServers();
 
 
-            // ********************
-            //
-            // POST Boot
-            //
-            //  It is safer to set initial value of ServerState before this line, if any.
-            //  Below this line, comm sub-system will be booted using of at this point ServerState.
-            //
-            // ********************
-
-
             mainHall = "MainHall-" + serverInfo.getServerId();
             LocalChatRoomInfo localChatRoomInfo = new LocalChatRoomInfo();
             localChatRoomInfo.setOwner(""); //The owner of the MainHall in each server is "" (empty string)
@@ -133,21 +113,13 @@ public class ChatServer {
 
             startUpConnections();
 
-            //addMainHallsStatically();
             syncChatRooms();
 
             initiateCoordinator();
 
-//            if (systemProperties.getBoolean("failure.detector.gossip")) {
-//                logger.info("Failure Detection is running GOSSIP mode");
-//                startGossip();
-//                startConsensus();
-//            } else {
             System.out.println("Heartbeat starts running");
                 startHeartBeat();
-            //}
 
-            // Shutdown hook
             Runtime.getRuntime().addShutdownHook(new ShutdownService(servicePool));
 
         } catch (CmdLineException e) {
@@ -158,18 +130,15 @@ public class ChatServer {
     private void initiateCoordinator() {
         System.out.println("Starting initial coordinator election...");
         if (serverState.getServerInfoList().size() == 1) {
-            // if there's only one server then no need of an election
+
             serverState.setCoordinator(serverInfo);
         } else {
-          //  if (serverState.getIsFastBully()) {
 
-//                logger.info("Leader Election is running in FAST-BULLY mode");
-
-                new FastBullyElectionManagementService().sendIamUpMessage(serverState.getServerInfo(),
+                new FastBullyElection().sendIamUpMessage(serverState.getServerInfo(),
                         serverState.getServerInfoList());
                 try {
-                    //serverState.setViewMessageReceived(false);
-                    new FastBullyElectionManagementService().startWaitingForViewMessage(serverState.getElectionAnswerTimeout());
+
+                    new FastBullyElection().startWaitingForViewMessage(serverState.getElectionAnswerTimeout());
                 } catch (SchedulerException e) {
                     logger.error("Error while waiting for the view message at fast bully election: " +
                             e.getLocalizedMessage());
@@ -178,61 +147,11 @@ public class ChatServer {
         }
     }
 
-    private void startConsensus() {
-        try {
-
-            JobDetail consensusJob = JobBuilder.newJob(ConsensusJob.class)
-                    .withIdentity(Constant.CONSENSUS_JOB, "group1").build();
-
-            consensusJob.getJobDataMap().put("consensusVoteDuration", systemProperties.getInt("consensus.vote.duration"));
-
-            Trigger consensusTrigger = TriggerBuilder
-                    .newTrigger()
-                    .withIdentity(Constant.CONSENSUS_JOB_TRIGGER, "group1")
-                    .withSchedule(
-                            SimpleScheduleBuilder.simpleSchedule()
-                                    .withIntervalInSeconds(systemProperties.getInt("consensus.interval")).repeatForever())
-                    .build();
-
-            Scheduler scheduler = Quartz.getInstance().getScheduler();
-
-            scheduler.start();
-            scheduler.scheduleJob(consensusJob, consensusTrigger);
-
-        } catch (SchedulerException e) {
-            logger.error(e.getLocalizedMessage());
-        }
-    }
-
-    private void startGossip() {
-        try {
-
-            JobDetail gossipJob = JobBuilder.newJob(GossipJob.class)
-                    .withIdentity(Constant.GOSSIP_JOB, "group1").build();
-
-            gossipJob.getJobDataMap().put("aliveErrorFactor", systemProperties.getInt("alive.error.factor"));
-
-            Trigger gossipTrigger = TriggerBuilder
-                    .newTrigger()
-                    .withIdentity(Constant.GOSSIP_JOB_TRIGGER, "group1")
-                    .withSchedule(
-                            SimpleScheduleBuilder.simpleSchedule()
-                                    .withIntervalInSeconds(systemProperties.getInt("alive.interval")).repeatForever())
-                    .build();
-
-            Scheduler scheduler = Quartz.getInstance().getScheduler();
-            scheduler.start();
-            scheduler.scheduleJob(gossipJob, gossipTrigger);
-
-        } catch (SchedulerException e) {
-            logger.error(e.getLocalizedMessage());
-        }
-    }
 
     private void startHeartBeat() {
         try {
 
-            JobDetail aliveJob = JobBuilder.newJob(AliveJob.class)
+            JobDetail aliveJob = JobBuilder.newJob(heartbeat.class)
                     .withIdentity(Constant.ALIVE_JOB, "group1").build();
 
             aliveJob.getJobDataMap().put("aliveErrorFactor", systemProperties.getInt("alive.error.factor"));
@@ -304,22 +223,6 @@ public class ChatServer {
         }
     }
 
-    private void addMainHallsStatically() {
-        for (ServerInfo server : serverState.getServerInfoList()) {
-            if (server.equals(serverInfo)) continue;
-            String room = "MainHall-" + server.getServerId();
-            RemoteChatRoomInfo remoteRoom = new RemoteChatRoomInfo();
-            remoteRoom.setChatRoomId(room);
-            remoteRoom.setManagingServer(server.getServerId());
-            serverState.getRemoteChatRooms().put(room, remoteRoom);
-        }
-    }
-
-    /**
-     * TODO Spec #4 improve server self register into system
-     * This is working by utilising the existing protocols, i.e. by calling a few protocols.
-     * A better approach might be, to create a new protocol to handle this.
-     */
     private void syncChatRooms() {
         PeerClient peerClient = new PeerClient();
         JSONMessageBuilder messageBuilder = JSONMessageBuilder.getInstance();

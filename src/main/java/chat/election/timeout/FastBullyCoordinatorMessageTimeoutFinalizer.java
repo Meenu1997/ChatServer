@@ -1,4 +1,4 @@
-package chat.service.election.timeout;
+package chat.election.timeout;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,7 +6,7 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import chat.common.model.ServerInfo;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 @DisallowConcurrentExecution
 public class FastBullyCoordinatorMessageTimeoutFinalizer extends MessageTimeoutFinalizer {
@@ -16,8 +16,8 @@ public class FastBullyCoordinatorMessageTimeoutFinalizer extends MessageTimeoutF
         if (!interrupted.get()) {
             // coordinator message was not received
             // so get the next top candidate and send a nomination request
-            FastBullyElectionManagementService fastBullyElectionManagementService =
-                    new FastBullyElectionManagementService();
+            FastBullyElection fastBullyElectionManagementService =
+                    new FastBullyElection();
 
             try {
 

@@ -33,7 +33,7 @@
         <!-- Debug Bully -->
 
         <Logger name="chat.handler.management.election" level="DEBUG"/>
-        <Logger name="chat.service.election" level="DEBUG"/>
+        <Logger name="chat.election" level="DEBUG"/>
 
         <!-- others -->
         <!--<Logger name="org.quartz" level="INFO"/>-->

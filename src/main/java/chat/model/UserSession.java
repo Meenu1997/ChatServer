@@ -14,24 +14,13 @@ public class UserSession {
         this.username = username;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {

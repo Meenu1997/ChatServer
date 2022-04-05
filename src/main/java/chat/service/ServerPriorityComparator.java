@@ -3,9 +3,7 @@ package chat.service;
 import java.io.Serializable;
 import java.util.Comparator;
 
-/**
- * Compares server priority based on the server id.
- */
+
 public class ServerPriorityComparator implements Comparator<String>, Serializable {
 
     @Override

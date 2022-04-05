@@ -8,7 +8,7 @@ import chat.common.model.ServerInfo;
 import chat.handler.IProtocolHandler;
 import chat.handler.management.ManagementHandler;
 import chat.service.ServerPriorityComparator;
-import chat.service.election.FastBullyElectionManagementService;
+import chat.election.FastBullyElection;
 
 public class FastBullyViewMessageHandler extends ManagementHandler implements IProtocolHandler {
 
@@ -32,8 +32,8 @@ public class FastBullyViewMessageHandler extends ManagementHandler implements IP
 
         serverState.addToTemporaryCandidateMap(currentCoordinator);
 
-        FastBullyElectionManagementService fastBullyElectionManagementService =
-                new FastBullyElectionManagementService();
+        FastBullyElection fastBullyElectionManagementService =
+                new FastBullyElection();
 
         ServerInfo myServerInfo = serverState.getServerInfo();
         String myServerId = myServerInfo.getServerId();

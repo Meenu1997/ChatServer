@@ -13,7 +13,6 @@ public class DeleteRoomServerProtocolHandler extends ManagementHandler implement
 
     @Override
     public void handle() {
-        //{"type" : "deleteroom", "serverid" : "s1", "roomid" : "jokes"}
         String deletingRoomId = (String) jsonMessage.get(Protocol.roomid.toString());
         serverState.getRemoteChatRooms().remove(deletingRoomId);
         messageQueue.add(new Message(false, "exit"));

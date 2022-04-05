@@ -15,7 +15,6 @@ public class LockRoomIdProtocolHandler extends ManagementHandler implements IPro
 
     @Override
     public void handle() {
-        // {"type" : "lockroomid", "serverid" : "s1", "roomid" : "jokes"}
         String requestRoomId = (String) jsonMessage.get(Protocol.roomid.toString());
         String serverId = (String) jsonMessage.get(Protocol.serverid.toString());
 

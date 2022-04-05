@@ -167,20 +167,6 @@ public class ServerState {
             serverInfoMap.put(serverInfo.getServerId(), serverInfo);
         }
 
-
-/*
-        for (int i = 0; i < serverInfoList.size(); i++) {
-            ServerInfo s = serverInfoList.get(i);
-            if (s.getServerId().equalsIgnoreCase(serverInfo.getServerId())) {
-                logger.info("Server " + serverInfo.getServerId() + " already exist.");
-            } else {
-                if (!Objects.equals(s.getPort(), serverInfo.getPort())) {
-                    logger.info("Adding server " + serverInfo.getServerId() + " to server list.");
-                    serverInfoList.add(serverInfo);
-                }
-            }
-        }
-*/
     }
 
     public synchronized void setupConnectedServers() {
@@ -200,8 +186,6 @@ public class ServerState {
     public synchronized void removeServerInSuspectList(String serverId) {
         suspectList.remove(serverId);
     }
-
-    // thread safe, back by concurrency proof data structure
 
     public ConcurrentHashMap<Lingo.Consensus, Integer> getVoteSet() {
         return voteSet;
@@ -263,9 +247,6 @@ public class ServerState {
         return stopRunning.get();
     }
 
-    public AtomicBoolean onGoingConsensus() {
-        return ongoingConsensus;
-    }
 
     public void removeRemoteChatRoomsByServerId(String serverId) {
         for (String entry : remoteChatRooms.keySet()) {
@@ -371,10 +352,6 @@ public class ServerState {
 
     public void setIsFastBully(boolean isFastBully) {
         this.isFastBully.set(isFastBully);
-    }
-
-    public boolean isOngoingElection() {
-        return ongoingElection.get();
     }
 
     public void setOngoingElection(boolean ongoingElection) {

@@ -23,7 +23,6 @@ public class MessageReader implements Runnable {
 	public void run() {
 		try {
 
-            //logger.trace("Reading messages from client connection");
 
 			String clientMsg;
 			while ((clientMsg = reader.readLine()) != null) {
@@ -46,14 +45,7 @@ public class MessageReader implements Runnable {
             //Remote host closed connection during handshake
             if (ioe.getMessage().equalsIgnoreCase("Remote host closed connection during handshake")) {
                 logger.warn("[KNOW ISSUE #1] Remote host closed connection during handshake");
-                /**
-                 * TODO KNOW ISSUE #1
-                 * Apparently this exception is thrown on first time connection.
-                 * Can't figure out why...
-                 * But the connection is working either way. Put it as known issue for now.
-                 * Otherwise uncomment stack trace to debug.
-                 */
-                //ioe.printStackTrace();
+
             } else {
                 //ioe.printStackTrace();
 				logger.warn(ioe.getLocalizedMessage());

@@ -6,9 +6,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionListenerAdapter;
 import chat.model.UserSession;
 
-/**
- * Experimental
- */
+
 public class UserSessionListener extends SessionListenerAdapter {
 
     private ServerState serverState = ServerState.getInstance();

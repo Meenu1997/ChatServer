@@ -19,11 +19,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
 
-/**
- * NOTE: This PeerClient is set to be deprecated or refactored.
- * Keep logger trace mode here. Use trace, if debugging
- * comm level issue if any. Usually methods here are quite stable.
- */
+
 public class PeerClient {
 
     private final JSONMessageBuilder messageBuilder = JSONMessageBuilder.getInstance();
@@ -278,11 +274,6 @@ public class PeerClient {
         return null;
     }
 
-    private void performSystemDaemonAuthentication(BufferedWriter writer) throws IOException {
-        logger.trace("Sending systemdaemon login request...");
-        writer.write(messageBuilder.makeLoginMessage("systemdaemon", "gaja5EPrEB5T") + "\n");
-        writer.flush();
-    }
 
     private static final Logger logger = LogManager.getLogger(PeerClient.class);
 }
