@@ -11,8 +11,6 @@ public class QuitProtocolHandler extends CommonHandler implements IProtocolHandl
 
     @Override
     public void handle() {
-        //{"type" : "roomchange", "identity" : "Adel", "former" : "MainHall-s1", "roomid" : ""}
-
         String former = userInfo.getCurrentChatRoom();
 
         doGracefulQuit();

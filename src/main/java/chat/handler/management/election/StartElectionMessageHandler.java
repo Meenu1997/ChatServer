@@ -30,18 +30,6 @@ public class StartElectionMessageHandler extends ManagementHandler implements IP
                     new ServerInfo(potentialCandidateId, potentialCandidateAddress, potentialCandidatePort,
                             potentialCandidateManagementPort);
 
-//            new BullyElectionManagementService()
-//                    .replyAnswerForElectionMessage(potentialCandidate, serverState.getServerInfo());
-//
-//            // start a new election among the servers that have a higher priority
-//
-//            new BullyElectionManagementService()
-//                    .startElection(serverState.getServerInfo(), serverState.getCandidateServerInfoList(),
-//                            serverState.getElectionAnswerTimeout());
-//
-//            new BullyElectionManagementService()
-//                    .startWaitingForAnswerMessage(serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
-
         }
     }
 

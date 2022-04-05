@@ -22,55 +22,11 @@ public class MoveJoinProtocolHandler extends CommonHandler implements IProtocolH
     @Override
     public void handle() {
 
-//        String transitUsername = (String) jsonMessage.get(Protocol.username.toString());
-//        String transitSessionId = (String) jsonMessage.get(Protocol.sessionid.toString());
-//        String transitPassword = (String) jsonMessage.get(Protocol.password.toString());
-//        if (!Strings.isNullOrEmpty(transitUsername) && !Strings.isNullOrEmpty(transitSessionId)) {
-//            RemoteUserSession remoteUserSession = serverState.getRemoteUserSessions().get(transitSessionId);
-//            if (remoteUserSession != null) {
-//
-//                try {
-//                    Subject currentUser = clientConnection.getCurrentUser();
-//                    UsernamePasswordToken token = new UsernamePasswordToken(transitUsername, transitPassword);
-//
-//                    currentUser.login(token);
-//
-//                    String username = (String) currentUser.getPrincipal();
-//                    String sessionId = (String) currentUser.getSession().getId();
-//
-//                    UserSession userSession = new UserSession();
-//                    userSession.setUsername(username);
-//                    userSession.setSessionId(sessionId);
-//                    userSession.setStatus("login");
-//                    userSession.setPassword(transitPassword);
-//                    serverState.getLocalUserSessions().put(sessionId, userSession);
-//
-//                    logger.info("Added user session to the local user session list: " + username + " [" + sessionId + "]");
-//
-//                    serverState.getRemoteUserSessions().remove(transitSessionId);
-//
-//                    // let peers know my new local user session
-//                    peerClient.relayPeers(messageBuilder.notifyUserSession(username, sessionId, "login"));
-//
-//                } catch (AuthenticationException aex) {
-//
-//                    write(messageBuilder.serverChange("false", serverInfo.getServerId()));
-//                    //messageQueue.add(new Message(false, messageBuilder.authResponse("false", "AuthenticationException")));
-//                    logger.warn("MoveJoinProtocolHandler: an attempt to transparent transit authentication has failed.");
-//                    return;
-//                }
-//            }
-//        }
-//
-//        if (clientConnection.getCurrentUser().isAuthenticated()) {
             doNormalMoveJoin();
-//        } else {
-//            write(messageBuilder.serverChange("false", serverInfo.getServerId()));
-//        }
+
     }
 
     private void doNormalMoveJoin() {
-        // {"type" : "movejoin", "former" : "MainHall-s1", "roomid" : "jokes", "identity" : "Maria"}
         String joiningRoomId = (String) jsonMessage.get(Protocol.roomid.toString());
         String former = (String) jsonMessage.get(Protocol.former.toString());
         String identity = (String) jsonMessage.get(Protocol.identity.toString());

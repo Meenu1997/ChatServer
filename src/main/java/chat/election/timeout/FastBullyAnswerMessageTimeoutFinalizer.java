@@ -17,7 +17,6 @@ public class FastBullyAnswerMessageTimeoutFinalizer extends MessageTimeoutFinali
                 new FastBullyElection();
 
         if (serverState.answerMessageReceived() || interrupted.get()) {
-            // answer messages were received
             ServerInfo topCandidate = serverState.getTopCandidate();
             fastBullyElectionManagementService.sendNominationMessage(topCandidate);
             System.out.println("Answer message received. Sending nomination to : " + topCandidate.getServerId());
@@ -25,8 +24,6 @@ public class FastBullyAnswerMessageTimeoutFinalizer extends MessageTimeoutFinali
                     .startWaitingForCoordinatorMessage(serverState.getElectionCoordinatorTimeout());
             serverState.setAnswerMessageReceived(false);
         } else {
-            // answer messages were not received
-            // send coordinator message to lower priority servers
             fastBullyElectionManagementService.sendCoordinatorMessage(serverState.getServerInfo(),
                     serverState.getSubordinateServerInfoList());
 

@@ -12,7 +12,7 @@ import chat.service.PeerClient;
 import chat.service.ServerState;
 import chat.election.FastBullyElection;
 
-public class AliveJob implements Job {
+public class heartbeat implements Job {
 
     private ServerState serverState = ServerState.getInstance();
     private JSONMessageBuilder messageBuilder = JSONMessageBuilder.getInstance();
@@ -58,16 +58,6 @@ public class AliveJob implements Job {
                             new FastBullyElection().startElection(serverState.getServerInfo(),
                                     serverState.getCandidateServerInfoList(), serverState.getElectionAnswerTimeout());
 
-                        } else {
-
-//                            new BullyElectionManagementService().startElection(
-//                                    serverState.getServerInfo(),
-//                                    serverState.getCandidateServerInfoList(),
-//                                    serverState.getElectionAnswerTimeout());
-//
-//                            new BullyElectionManagementService().startWaitingForAnswerMessage(
-//                                    serverState.getServerInfo(), serverState.getElectionAnswerTimeout());
-
                         }
                     }
                     peerClient.relayPeers(messageBuilder.notifyServerDownMessage(serverId));
@@ -81,5 +71,5 @@ public class AliveJob implements Job {
         }
     }
 
-    private static final Logger logger = LogManager.getLogger(AliveJob.class);
+    private static final Logger logger = LogManager.getLogger(heartbeat.class);
 }

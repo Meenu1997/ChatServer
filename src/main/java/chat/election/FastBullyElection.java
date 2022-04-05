@@ -51,8 +51,6 @@ public class FastBullyElection {
     public void startWaitingTimer(String groupId, Long timeout, JobDetail jobDetail) {
         try {
 
-//            System.out.println(String.format("Starting the waiting job [%s] : %s",
-//                    scheduler.getSchedulerName(), jobDetail.getKey()));
 
             if (scheduler.checkExists(jobDetail.getKey())) {
 
@@ -78,9 +76,6 @@ public class FastBullyElection {
 
                 System.out.println(String.format("Job get trigger again [%s]", jobDetail.getKey().getName()));
                 scheduler.triggerJob(jobDetail.getKey());
-
-                //System.err.println(Arrays.toString(scheduler.getTriggerKeys(GroupMatcher.anyGroup()).toArray()));
-                // [DEFAULT.MT_e8f718prrj3ol, group1.GOSSIPJOBTRIGGER, group1.CONSENSUSJOBTRIGGER, group_fast_bully.ELECTION_TRIGGER]
 
             } catch (SchedulerException e) {
                 e.printStackTrace();

@@ -13,7 +13,6 @@ public class LockIdentityProtocolHandler extends ManagementHandler implements IP
 
     @Override
     public void handle() {
-        // {"type" : "lockidentity", "serverid" : "s1", "identity" : "Adel"}
         String requestUserId = (String) jsonMessage.get(Protocol.identity.toString());
         String serverId = (String) jsonMessage.get(Protocol.serverid.toString());
         String lok = serverId.concat(requestUserId);

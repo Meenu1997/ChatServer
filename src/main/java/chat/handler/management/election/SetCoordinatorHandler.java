@@ -19,8 +19,6 @@ public class SetCoordinatorHandler extends ManagementHandler implements IProtoco
         // stop its election
         System.out.println("Received coordinator from : " + jsonMessage.get(Protocol.serverid.toString()));
 
-//        new BullyElectionManagementService().stopElection(serverState.getServerInfo());
-
         // accept the new coordinator
         String newCoordinatorId = (String) jsonMessage.get(Protocol.serverid.toString());
         String newCoordinatorAddress = (String) jsonMessage.get(Protocol.address.toString());
@@ -30,8 +28,6 @@ public class SetCoordinatorHandler extends ManagementHandler implements IProtoco
         ServerInfo newCoordinator = new ServerInfo(newCoordinatorId, newCoordinatorAddress, newCoordinatorPort,
                 newCoordinatorManagementPort);
 
-//        new BullyElectionManagementService().acceptNewCoordinator(newCoordinator);
-//        System.out.println("Accepted new Coordinator : " + newCoordinatorId);
     }
 
     private static final Logger logger = LogManager.getLogger(SetCoordinatorHandler.class);

@@ -9,7 +9,6 @@ import chat.handler.management.*;
 import chat.handler.management.consensus.AnswerVoteMessageHandler;
 import chat.handler.management.consensus.StartVoteMessageHandler;
 import chat.handler.management.election.*;
-import chat.handler.management.gossip.GossipProtocolHandler;
 import chat.service.ClientConnection;
 import chat.service.ManagementConnection;
 import chat.service.ServerState;
@@ -39,11 +38,6 @@ public class ProtocolHandlerFactory {
 
         String type = (String) jsonMessage.get(Protocol.type.toString());
 
-        //-- START Public protocols i.e before login
-
-//      if (type.equalsIgnoreCase(Protocol.authenticate.toString())) {
-//          return new AuthenticateProtocolHandler(jsonMessage, connection);
-//     }
 
         // Added 16/20/16 by Ray
         if (type.equalsIgnoreCase(Protocol.listserver.toString())) {
@@ -61,9 +55,7 @@ public class ProtocolHandlerFactory {
 
         ClientConnection clientConnection = (ClientConnection) connection;
 
-//     if (!clientConnection.getCurrentUser().isAuthenticated()) {
-//           return new UnauthorisedExitHandler(jsonMessage, connection);
-//      }
+
 
         if (type.equalsIgnoreCase(Protocol.newidentity.toString())) {
             return new NewIdentityProtocolHandler(jsonMessage, connection);
@@ -177,9 +169,9 @@ public class ProtocolHandlerFactory {
             return new FastBullyIAmUpMessageHandler(jsonMessage, connection);
         }
 
-        if (type.equalsIgnoreCase(Protocol.gossip.toString())) {
-            return new GossipProtocolHandler(jsonMessage, connection);
-        }
+//        if (type.equalsIgnoreCase(Protocol.gossip.toString())) {
+//            return new GossipProtocolHandler(jsonMessage, connection);
+//        }
 
         if (type.equalsIgnoreCase(Protocol.startvote.toString())) {
             return new StartVoteMessageHandler(jsonMessage, connection);
